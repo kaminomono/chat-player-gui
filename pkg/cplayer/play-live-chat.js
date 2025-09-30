@@ -47,6 +47,25 @@ function resizeChatDiv() {
     chat_div.style.height = (height-5) + "px";
 }
 
+// 針對直立影片（寬度比高度還要小），預設的 css width:70% 不管用
+// 很直覺得設定 max-height 或是 height 也是不管用
+// 所以我們需要根據影片以及視窗的長寬比例來計算一個 % 數。
+function resizeShortVideo() {
+  const v_height = video1.getClientRects()[0].height;
+  const v_width = video1.getClientRects()[0].width;
+  if (v_height > v_width) {
+    const w_height = window.innerHeight;
+    const w_width = window.innerWidth;
+    const target_height = w_height * 0.8;
+    const target_width = (v_width / v_height) * target_height;
+    const target_percent = Math.floor((target_width*100)/w_width);
+    video1.style.width = target_percent + "%";
+    video1.style.paddingLeft = "5em";
+    video1.style.paddingRight = "5em";
+    //video1.style.width = "22%";
+  }
+}
+
 window.addEventListener("resize", resizeChatDiv);
 video1.addEventListener("resize", resizeChatDiv);
 
@@ -432,5 +451,6 @@ video1.onseeked = function() {
 init_js_from_embedded();
 init_setlist_from_embedded();
 
-setTimeout(sync_live_chat_work, 500);
-setTimeout(resizeChatDiv, 500); // for the mp4 without video (m4a?), the resize event will never trigger.
+setTimeout(sync_live_chat_work, 700);
+setTimeout(resizeChatDiv, 700); // for the mp4 without video (m4a?), the resize event will never trigger.
+setTimeout(resizeShortVideo, 500);
