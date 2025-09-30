@@ -443,7 +443,7 @@ function sync_live_chat_work() {
 }
 
 video1.onseeked = function() {
-    if (video1.paused) {
+    if (video1.paused && option_sync.checked) {
         sync_live_chat();
     }
 }
