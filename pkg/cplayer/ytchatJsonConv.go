@@ -97,16 +97,22 @@ func preprocessJson(option *Option, down ImgDownloader, jsonText, outDir string)
 			}
 		}
 	}
-	if _, exist := replayChat["videoOffsetTimeMsec"]; exist && option.TimeOffsetInSec > 0 {
+	if _, exist := replayChat["videoOffsetTimeMsec"]; exist && option.TimeOffsetInSec != 0 {
 		timeInMs, err := strconv.Atoi(replayChat["videoOffsetTimeMsec"].(string))
 		if err == nil {
 			timeInMs += option.TimeOffsetInSec * 1000
+			if timeInMs < 0 {
+				timeInMs = 0
+			}
 			replayChat["videoOffsetTimeMsec"] = strconv.Itoa(timeInMs)
 		}
-	} else if _, exist := jsonmap["videoOffsetTimeMsec"]; exist && option.TimeOffsetInSec > 0 {
+	} else if _, exist := jsonmap["videoOffsetTimeMsec"]; exist && option.TimeOffsetInSec != 0 {
 		timeInMs, err := strconv.Atoi(jsonmap["videoOffsetTimeMsec"].(string))
 		if err == nil {
 			timeInMs += option.TimeOffsetInSec * 1000
+			if timeInMs < 0 {
+				timeInMs = 0
+			}
 			jsonmap["videoOffsetTimeMsec"] = strconv.Itoa(timeInMs)
 		}
 	}
