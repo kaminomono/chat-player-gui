@@ -8,6 +8,7 @@ type Option struct {
 	Path            string
 	OutDir          string
 	SplitRes        bool
+	ForceDarkCss    bool
 	TimeOffsetInSec int
 }
 

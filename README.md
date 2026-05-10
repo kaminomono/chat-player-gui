@@ -33,15 +33,19 @@ chatplay [option] [file or directory]
 
 option:
   -chat-json string
-    	live chat json file (download by yt-dlp)
+        live chat json file (download by yt-dlp)
+  -force-dark
+        強制使用黑色背景(預設是依照瀏覽器自動判斷)
   -no-download-pic
-    	不要把聊天室貼圖抓下來 (每次開網頁使用youtube檔案)
+        不要把聊天室貼圖抓下來 (每次開網頁使用youtube檔案)
+  -offset int
+        time offset for live chat (second)
   -out-dir string
-    	輸出目錄，預設是目前工作目錄
+        輸出目錄，預設是目前工作目錄
   -output string
-    	output html file, 不指定就是目前工作目錄跟影片同檔名的htm
+        output html file, 不指定就是目前工作目錄跟影片同檔名的htm
   -set-list string
-    	時間軸 txt 檔
+        時間軸 txt 檔
   -split-res
         分離 javascript, css 檔案，預設是嵌在html裡面
  ```

@@ -1,0 +1,88 @@
+:root {
+    --background: #000000;
+    --normal-text: rgb(241, 241, 241);
+    --chat-name: rgba(255, 255, 255, 0.7);
+    --chat-time: rgba(255, 255, 255, 0.54);
+    --yt-live-chat-sponsor-color: #2ba640
+}
+
+body {
+    background-color: var(--background);
+    color: var(--normal-text);
+}
+div#main {
+    width: 100%;
+}
+#video1 {
+    width: 70%;
+    vertical-align: top;
+}
+div #live-chat {
+    display: inline-block;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 25%;
+    vertical-align: top;
+    padding-left: 10px;
+    border: 3px solid var(--chat-time);
+    border-radius: 5px;
+}
+div #timestamp,#option {
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 2em;
+}
+div.live-chat-item {
+    margin-bottom: 0.5rem;
+}
+div.sc-block {
+    margin: 5px;
+    width: 75%;
+}
+div.sc-block div.text,
+div.sc-block div.header {
+    padding: 5px 5px 0 5px;
+}
+div.sc-block div.text {
+    vertical-align: super;
+}
+div.live-chat-sc div.sc-block {
+    display: inline-block;
+}
+
+/* super sticker */
+div.live-chat-sticker div.sc-block {
+    display: inline-table;
+}
+div.live-chat-sticker div.sc-block div.header,
+div.live-chat-sticker div.sc-block div.text {
+    /* .header and .text */
+    display: table-cell;
+    vertical-align: top;
+}
+img.sticker {
+    width: 6rem;
+    float: right;
+}
+
+img.emoji {
+    width: 1.5rem;
+    vertical-align: bottom;
+}
+.c_time, .t_time {
+    color: var(--chat-time);
+    font-size: 0.9em;
+    vertical-align: baseline;
+    cursor: pointer;
+}
+div.live-chat-item .c_name.member {
+    color: var(--yt-live-chat-sponsor-color);
+}
+div.live-chat-item .c_badges.member {
+    padding-right: 4px;
+}
+div.live-chat-item .c_badges.member img {
+    width: 1rem;
+}
+.c_name { color: var(--chat-name); }
+.t_title { padding-left: 0.5rem; }

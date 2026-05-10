@@ -24,6 +24,7 @@ func parseCommandline() *cplayer.Option {
 	flag.StringVar(&option.OutDir, "out-dir", "", "輸出目錄，預設是目前工作目錄")
 	flag.BoolVar(&option.NoDownloadPic, "no-download-pic", false, "不要把聊天室貼圖抓下來 (每次開網頁使用youtube檔案)")
 	flag.BoolVar(&option.SplitRes, "split-res", false, "分離 javascript, css 檔案，預設是嵌在html裡面")
+	flag.BoolVar(&option.ForceDarkCss, "force-dark", false, "強制使用黑色背景(預設是依照瀏覽器自動判斷)")
 	flag.BoolVar(&argVersion, "version", false, "show program version and exit.")
 	flag.Parse()
 

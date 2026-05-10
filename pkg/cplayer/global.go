@@ -14,6 +14,9 @@ var Playlivechatjs string
 //go:embed style.css
 var StyleCss string
 
+//go:embed style-dark.css
+var StyleDarkCss string
+
 // var option *Option
 
 var ErrNotFoundJson error = errors.New("not found .live_chat.json file")

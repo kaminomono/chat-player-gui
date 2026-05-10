@@ -88,12 +88,16 @@ func ProcessVideo(option *Option, videoFile string) error {
 	if option.SplitRes {
 		js = `<script src="play-live-chat.js"></script>`
 		css = `<link rel="stylesheet" type="text/css" href="style.css">`
-		if err := writeResFile(outDir); err != nil {
+		if err := writeResFile(option, outDir); err != nil {
 			return err
 		}
 	} else {
 		js = "<script>\n" + Playlivechatjs + "\n</script>"
-		css = "<style>\n" + StyleCss + "\n</style>"
+		if option.ForceDarkCss {
+			css = "<style>\n" + StyleDarkCss + "\n</style>"
+		} else {
+			css = "<style>\n" + StyleCss + "\n</style>"
+		}
 	}
 	htmText = strings.ReplaceAll(htmText, "{{javascript1}}", js)
 	htmText = strings.ReplaceAll(htmText, "{{stylecss1}}", css)
@@ -103,7 +107,7 @@ func ProcessVideo(option *Option, videoFile string) error {
 	return nil
 }
 
-func writeResFile(outDir string) error {
+func writeResFile(option *Option, outDir string) error {
 	jsFile, err := os.Create(filepath.Join(outDir, "play-live-chat.js"))
 	if err != nil {
 		return err
@@ -115,6 +119,10 @@ func writeResFile(outDir string) error {
 		return err
 	}
 	defer cssFile.Close()
-	cssFile.WriteString(StyleCss)
+	if option.ForceDarkCss {
+		cssFile.WriteString(StyleDarkCss)
+	} else {
+		cssFile.WriteString(StyleCss)
+	}
 	return nil
 }
