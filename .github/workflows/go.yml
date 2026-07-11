@@ -6,19 +6,17 @@ name: Go
 on:
   push:
     tags:
-      - v1.*
-  pull_request:
-    branches: [ "main" ]
+      - 'v1.*'
+    branches:
+      - 'main'
 
 jobs:
 
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
-
-    - name: Set up Go
-      uses: actions/setup-go@v6
+    - uses: actions/checkout@v7
+    - uses: actions/setup-go@v6
       with:
         go-version-file: 'go.mod'
 
@@ -30,7 +28,7 @@ jobs:
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "auto-release"
-        prerelease: false
+        prerelease: true
         title: "Development Build"
         files: |
           chatplayer-linux-x86-64.zip
