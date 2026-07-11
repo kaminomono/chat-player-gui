@@ -12,7 +12,7 @@
     "webpack": "^5.108.4"
   },
   "scripts": {
-    "build": "webpack build",
+    "build": "webpack build --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
