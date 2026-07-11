@@ -1,61 +1,13 @@
-const body = document.getElementsByTagName('body');
 const video1 = <HTMLVideoElement>document.getElementById('video1');
 const chat_div = <HTMLDivElement>document.getElementById('live-chat');
 const timestamp_div = <HTMLDivElement>document.getElementById('timestamp');
-const chat_templ = <HTMLDivElement>document.getElementById('live-chat-item-template');
-const sc_templ = <HTMLDivElement>document.getElementById('live-chat-sc-template');
 const timestamp_templ = <HTMLDivElement>document.getElementById('timestamp-template');
 const option_sync = <HTMLInputElement>document.getElementById('option-sync');
-const option_toggle_theme = <HTMLButtonElement>document.getElementById('option-toggle-theme');
 const chat_array: number[] = [];
 
-class ChatTextNode {
-    node: HTMLDivElement;
-    c_content: HTMLSpanElement;
-    c_name: HTMLSpanElement;
-    c_badges: HTMLSpanElement;
-    c_time: HTMLSpanElement;
-    constructor(timeInMs: number) {
-        this.node = <HTMLDivElement>chat_templ.cloneNode(true);
-        this.node.removeAttribute('id');
-        this.c_content = <HTMLSpanElement>this.node.getElementsByClassName('c_content')[0];
-        this.c_name = <HTMLSpanElement>this.node.getElementsByClassName('c_name')[0];
-        this.c_badges = <HTMLSpanElement>this.node.getElementsByClassName("c_badges")[0];
-        this.c_time = <HTMLSpanElement>this.node.getElementsByClassName('c_time')[0];
-        this.c_time.setAttribute('time_in_ms', timeInMs.toString());
-        this.c_time.innerHTML = prettyFormatTime(timeInMs);
-        this.c_time.onclick = comment_time_click;
-    }
-}
-
-class SuperChatNode {
-    node: HTMLDivElement;
-    c_header: HTMLSpanElement;
-    c_name: HTMLDivElement;
-    c_paid: HTMLDivElement;
-    c_text: HTMLDivElement;
-    c_time: HTMLSpanElement;
-    constructor(timeInMs: number) {
-        this.node = <HTMLDivElement>sc_templ.cloneNode(true);
-        this.node.removeAttribute('id');
-        this.c_header = <HTMLDivElement>this.node.getElementsByClassName('header')[0];
-        this.c_text = <HTMLDivElement>this.node.getElementsByClassName('text')[0];
-        this.c_name = <HTMLDivElement>this.node.getElementsByClassName('name')[0];
-        this.c_paid = <HTMLDivElement>this.node.getElementsByClassName('paid')[0];
-        this.c_time = <HTMLSpanElement>this.node.getElementsByClassName('c_time')[0];
-        this.c_time.setAttribute('time_in_ms', timeInMs.toString());
-        this.c_time.innerHTML = prettyFormatTime(timeInMs);
-        this.c_time.onclick = comment_time_click;
-    }
-
-    setStickerMode() {
-        this.node.setAttribute("class", "live-chat-sticker");
-    }
-
-    setGiftMode() {
-        this.node.setAttribute("class", "live-chat-gift");
-    }
-}
+import { LiveChatItem, LiveChatSC } from './html_template'
+import { prettyFormatTime } from './strfmt'
+import { attachToggleThemeButton } from './theme_btn'
 
 function resizeChatDiv() {
     const height = video1.getClientRects()[0].height
@@ -83,25 +35,6 @@ function resizeShortVideo() {
 
 window.addEventListener("resize", resizeChatDiv);
 video1.addEventListener("resize", resizeChatDiv);
-
-function prettyFormatTime(timeInMs: number) {
-    const timeInSec = Math.floor(timeInMs / 1000);
-    const timeSec = timeInSec % 60;
-    const timeInMinute = Math.floor(timeInSec / 60);
-    const timeMinute = timeInMinute % 60;
-    const timeInHour = Math.floor(timeInMinute / 60);
-    var str = "";
-    if (timeInHour < 10)
-        str += "0";
-    str += timeInHour + ":";
-    if (timeMinute < 10)
-        str += "0";
-    str += timeMinute + ":";
-    if (timeSec < 10)
-        str += "0";
-    str += timeSec;
-    return str;
-}
 
 async function wait(timeInMs: number) {
     await new Promise(resolve => setTimeout(resolve, timeInMs));
@@ -166,7 +99,7 @@ async function create_chat_item(json_text: string) {
 
 function render_liveChatTextMessage(liveChatTextMessageRenderer: any, timeInMs: number) {
     var hasText = false;
-    var o = new ChatTextNode(timeInMs);
+    var o = new LiveChatItem(timeInMs, comment_time_click);
 
     if (!('message' in liveChatTextMessageRenderer)) {
         return;
@@ -187,7 +120,6 @@ function render_liveChatTextMessage(liveChatTextMessageRenderer: any, timeInMs: 
         }
         else if ('emoji' in run) {
             const emoji = run.emoji;
-            var image_url = "";
             if ('image' in emoji && 'thumbnails' in emoji.image) {
                 let thumbnails = emoji.image.thumbnails;
                 let image_url = thumbnails[thumbnails.length - 1].url;
@@ -233,7 +165,7 @@ function render_liveChatTextMessage(liveChatTextMessageRenderer: any, timeInMs: 
 }
 
 function render_liveChatPaidMessage(liveChatPaidMessageRenderer: any, timeInMs: number) {
-    var o = new SuperChatNode(timeInMs)
+    var o = new LiveChatSC(timeInMs, comment_time_click)
 
     if ('headerBackgroundColor' in liveChatPaidMessageRenderer) {
         o.c_header.style.backgroundColor = toColor(liveChatPaidMessageRenderer.headerBackgroundColor);
@@ -294,7 +226,7 @@ function render_liveChatPaidMessage(liveChatPaidMessageRenderer: any, timeInMs: 
 }
 
 function render_liveChatSticker(liveChatPaidStickerRenderer: any, timeInMs: number) {
-    var o = new SuperChatNode(timeInMs);
+    var o = new LiveChatSC(timeInMs, comment_time_click);
     o.c_header.style.backgroundColor = toColor(liveChatPaidStickerRenderer.moneyChipBackgroundColor);
     o.c_header.style.color = toColor(liveChatPaidStickerRenderer.moneyChipTextColor);
     o.c_text.style.backgroundColor = toColor(liveChatPaidStickerRenderer.moneyChipBackgroundColor);
@@ -335,7 +267,7 @@ function render_liveChatGift(liveChatSponsorshipsGiftPurchaseAnnouncementRendere
         return;
     const renderer = header.liveChatSponsorshipsHeaderRenderer;
 
-    var o = new SuperChatNode(timeInMs);
+    var o = new LiveChatSC(timeInMs, comment_time_click);
     o.c_header.style.backgroundColor = "rgb(10, 128, 67)";
     o.c_header.style.color = "rgb(0,0,0)";
     o.c_text.innerHTML = "";
@@ -366,7 +298,7 @@ function render_liveChatGift(liveChatSponsorshipsGiftPurchaseAnnouncementRendere
 }
 
 function render_liveChatGiftRedemption(redempt: any, timeInMs: number) {
-    let o = new ChatTextNode(timeInMs);
+    var o = new LiveChatItem(timeInMs, comment_time_click);
     o.c_content.innerHTML = "";
     o.c_content.classList.add("gray");
 
@@ -395,7 +327,7 @@ function render_liveChatGiftRedemption(redempt: any, timeInMs: number) {
 }
 
 function render_giftMessageViewModel(gift: any, timeInMs: number) {
-    let o = new SuperChatNode(timeInMs);
+    let o = new LiveChatSC(timeInMs, comment_time_click);
     o.setGiftMode();
     o.c_text.innerHTML = "";
 
@@ -519,13 +451,8 @@ video1.onseeked = function() {
     }
 }
 
-option_toggle_theme?.addEventListener('click', () => {
-    let curTheme = document.documentElement.getAttribute('data-theme');
-    let newTheme = 'dark';
-    if (curTheme == 'dark')
-        newTheme = 'light';
-    document.documentElement.setAttribute('data-theme', newTheme);
-});
+attachToggleThemeButton();
+
 init_js_from_embedded();
 init_setlist_from_embedded();
 
