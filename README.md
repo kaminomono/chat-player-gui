@@ -59,11 +59,10 @@ json 檔案預設是影片檔名 + live_chat.json，這也是 yt-dlp 下載下�
 下載區有提供 windows-x86-64 與 linux-x86-64 執行檔。
 如果你是蘋果電腦，或是更奇怪的 arm 之類，可能需要編譯。
 
-1. 需要 golang 1.18
+1. 需要 golang 1.24, node.js v24.13.1
 2. git clone https://github.com/ting1322/chat-player.git
-3. cd chat-player
-4. go build
-5. 得到 chatplayer.exe
+3. 執行 build.sh
+4. 得到 chatplayer.exe
 
 # 補充說明
 
