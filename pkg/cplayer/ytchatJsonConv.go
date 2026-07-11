@@ -43,6 +43,12 @@ func preprocessJson(option *Option, down ImgDownloader, jsonText, outDir string)
 			} else if _, exist := addChatItem["liveChatSponsorshipsGiftRedemptionAnnouncementRenderer"]; exist {
 				// membership gift ??
 				// unimplement
+			} else if _, exist := addChatItem["giftMessageViewModel"]; exist {
+				// XXX 送出 6 顆寶石的震驚
+			} else if _, exist := addChatItem["liveChatPlaceholderItemRenderer"]; exist {
+				// 不知道啥
+			} else if _, exist := addChatItem["liveChatModeChangeMessageRenderer"]; exist {
+				// 不知道啥，會有很長一大串
 			} else {
 				log.Printf("unknown addChatItemAction.item node: %v", jsonText)
 				continue

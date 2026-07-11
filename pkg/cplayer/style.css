@@ -3,7 +3,11 @@
     --normal-text: #000000;
     --chat-name: rgba(17, 17, 17, 0.6);
     --chat-time: rgba(17, 17, 17, 0.4);
-    --yt-live-chat-sponsor-color: #107516
+    --yt-live-chat-sponsor-color: #107516;
+    --yt-live-chat-gray: rgba(17, 17, 17, 0.6);
+    --yt-live-chat-gray-bg: rgba(0, 0, 0, 0);
+    --yt-live-chat-gift-background-color: rgb(238, 238, 238);
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -13,7 +17,10 @@
         --normal-text: rgb(241, 241, 241);
         --chat-name: rgba(255, 255, 255, 0.7);
         --chat-time: rgba(255, 255, 255, 0.54);
-        --yt-live-chat-sponsor-color: #2ba640
+        --yt-live-chat-sponsor-color: #2ba640;
+        --yt-live-chat-gray: rgb(255,255,255);
+        --yt-live-chat-gray-bg: rgb(62, 62, 62);
+        --yt-live-chat-gift-background-color: rgb(62, 62, 62);
     }
 }
 
@@ -80,6 +87,20 @@ img.emoji {
     width: 1.5rem;
     vertical-align: bottom;
 }
+
+/* Gift */
+div.live-chat-gift div.sc-block {
+    display: inline-block;
+    background-color: var(--yt-live-chat-gift-background-color)
+}
+div.live-chat-gift div.sc-block div.header,
+div.live-chat-gift div.sc-block div.text {
+    /* .header and .text */
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+
 .c_time, .t_time {
     color: var(--chat-time);
     font-size: 0.9em;
@@ -96,4 +117,8 @@ div.live-chat-item .c_badges.member img {
     width: 1rem;
 }
 .c_name { color: var(--chat-name); }
+div.live-chat-item .c_content.gray {
+    color: var(--yt-live-chat-gray)
+    background-color: var(--yt-live-chat-gray-bg)
+}
 .t_title { padding-left: 0.5rem; }

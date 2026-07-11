@@ -40,6 +40,10 @@ class SuperChatNode {
     setStickerMode() {
         this.node.setAttribute("class", "live-chat-sticker");
     }
+
+    setGiftMode() {
+        this.node.setAttribute("class", "live-chat-gift");
+    }
 }
 
 function resizeChatDiv() {
@@ -132,6 +136,13 @@ async function create_chat_item(json_text) {
                 o = render_liveChatSticker(actionItem.liveChatPaidStickerRenderer, timeInMs);
             } else if ('liveChatSponsorshipsGiftPurchaseAnnouncementRenderer' in actionItem) {
                 o = render_liveChatGift(actionItem.liveChatSponsorshipsGiftPurchaseAnnouncementRenderer, timeInMs);
+            } else if ('liveChatSponsorshipsGiftRedemptionAnnouncementRenderer' in actionItem) {
+                // 收到會員禮物
+                o = render_liveChatGiftRedemption(actionItem.liveChatSponsorshipsGiftRedemptionAnnouncementRenderer, timeInMs);
+            } else if ('giftMessageViewModel' in actionItem) {
+                // XXX 送出 6 顆寶石的震驚
+                o = render_giftMessageViewModel(actionItem.giftMessageViewModel, timeInMs);
+            } else if ('liveChatTickerSponsorItemRenderer' in actionItem) {
             }
         }
     }
@@ -344,6 +355,56 @@ function render_liveChatGift(liveChatSponsorshipsGiftPurchaseAnnouncementRendere
                 console.log('unknown message');
             }
         }
+    }
+    return o
+}
+
+function render_liveChatGiftRedemption(redempt, timeInMs)
+{
+    let o = new ChatTextNode(timeInMs);
+    o.c_content.innerHTML = "";
+    o.c_content.classList.add("gray");
+
+    if ('authorName' in redempt) {
+        const authorName = redempt.authorName;
+        if ('simpleText' in authorName) {
+            o.c_name.innerHTML = authorName.simpleText;
+        } else {
+            console.log('unknown authorName');
+        }
+    }
+
+    if ('message' in redempt) {
+        const runs = redempt.message.runs;
+        for (const run of runs) {
+            if ('text' in run) {
+                let span = document.createElement('span');
+                span.innerHTML = run.text;
+                o.c_content.appendChild(span);
+            } else {
+                console.log('unknown message');
+            }
+        }
+    }
+    return o
+}
+
+function render_giftMessageViewModel(gift, timeInMs)
+{
+    let o = new SuperChatNode(timeInMs);
+    o.setGiftMode();
+    o.c_text.innerHTML = "";
+
+    if ('authorName' in gift) {
+        o.c_name.innerHTML = gift.authorName.content;
+    }
+
+    if ('text' in gift) {
+        let span = document.createElement('span');
+        span.innerHTML = gift.text.content;
+        o.c_paid.innerHTML = "";
+        o.c_text.innerHTML = "";
+        o.c_text.appendChild(span);
     }
     return o
 }
