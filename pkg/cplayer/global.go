@@ -11,6 +11,9 @@ var TemplateHtm string
 //go:embed play-live-chat.js
 var Playlivechatjs string
 
+//go:embed play-live-chat.js.map
+var PlaylivechatjsMap string
+
 //go:embed style.css
 var StyleCss string
 

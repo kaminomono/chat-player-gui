@@ -9,6 +9,10 @@ rm -f chatplayer \
    chatplayer-linux-x86-64.zip \
    chatplayer-windows-x86-64.zip
 
+npm install
+
+npm run build
+
 go test github.com/ting1322/chat-player/pkg/cplayer
 
 go build -o chatplayer -ldflags "-X main.programVersion=$ver"

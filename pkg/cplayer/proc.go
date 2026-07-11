@@ -114,6 +114,14 @@ func writeResFile(option *Option, outDir string) error {
 	}
 	defer jsFile.Close()
 	jsFile.WriteString(Playlivechatjs)
+
+	jsMapFile, err := os.Create(filepath.Join(outDir, "play-live-chat.js.map"))
+	if err != nil {
+		return err
+	}
+	defer jsMapFile.Close()
+	jsMapFile.WriteString(PlaylivechatjsMap)
+
 	cssFile, err := os.Create(filepath.Join(outDir, "style.css"))
 	if err != nil {
 		return err

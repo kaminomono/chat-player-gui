@@ -1,3 +1,6 @@
 chatplayer
 chatplayer.exe
 chatplayer-*.zip
+/node_modules/
+/pkg/cplayer/play-live-chat.js
+/pkg/cplayer/play-live-chat.js.map

@@ -1,39 +1,49 @@
 const body = document.getElementsByTagName('body');
-const video1 = document.getElementById('video1');
-const chat_div = document.getElementById('live-chat');
-const timestamp_div = document.getElementById('timestamp');
-const chat_templ = document.getElementById('live-chat-item-template');
-const sc_templ = document.getElementById('live-chat-sc-template');
-const timestamp_templ = document.getElementById('timestamp-template');
-const option_sync = document.getElementById('option-sync');
-const option_toggle_theme = document.getElementById('option-toggle-theme');
-const chat_array = [];
+const video1 = <HTMLVideoElement>document.getElementById('video1');
+const chat_div = <HTMLDivElement>document.getElementById('live-chat');
+const timestamp_div = <HTMLDivElement>document.getElementById('timestamp');
+const chat_templ = <HTMLDivElement>document.getElementById('live-chat-item-template');
+const sc_templ = <HTMLDivElement>document.getElementById('live-chat-sc-template');
+const timestamp_templ = <HTMLDivElement>document.getElementById('timestamp-template');
+const option_sync = <HTMLInputElement>document.getElementById('option-sync');
+const option_toggle_theme = <HTMLButtonElement>document.getElementById('option-toggle-theme');
+const chat_array: number[] = [];
 
-class ChatTextNode
-{
-    constructor(timeInMs) {
-        this.node = chat_templ.cloneNode(true);
+class ChatTextNode {
+    node: HTMLDivElement;
+    c_content: HTMLSpanElement;
+    c_name: HTMLSpanElement;
+    c_badges: HTMLSpanElement;
+    c_time: HTMLSpanElement;
+    constructor(timeInMs: number) {
+        this.node = <HTMLDivElement>chat_templ.cloneNode(true);
         this.node.removeAttribute('id');
-        this.c_content = this.node.getElementsByClassName('c_content')[0];
-        this.c_name = this.node.getElementsByClassName('c_name')[0];
-        this.c_badges = this.node.getElementsByClassName("c_badges")[0];
-        this.c_time = this.node.getElementsByClassName('c_time')[0];
-        this.c_time.setAttribute('time_in_ms', timeInMs);
+        this.c_content = <HTMLSpanElement>this.node.getElementsByClassName('c_content')[0];
+        this.c_name = <HTMLSpanElement>this.node.getElementsByClassName('c_name')[0];
+        this.c_badges = <HTMLSpanElement>this.node.getElementsByClassName("c_badges")[0];
+        this.c_time = <HTMLSpanElement>this.node.getElementsByClassName('c_time')[0];
+        this.c_time.setAttribute('time_in_ms', timeInMs.toString());
         this.c_time.innerHTML = prettyFormatTime(timeInMs);
         this.c_time.onclick = comment_time_click;
     }
 }
 
 class SuperChatNode {
-    constructor(timeInMs) {
-        this.node = sc_templ.cloneNode(true);
+    node: HTMLDivElement;
+    c_header: HTMLSpanElement;
+    c_name: HTMLDivElement;
+    c_paid: HTMLDivElement;
+    c_text: HTMLDivElement;
+    c_time: HTMLSpanElement;
+    constructor(timeInMs: number) {
+        this.node = <HTMLDivElement>sc_templ.cloneNode(true);
         this.node.removeAttribute('id');
-        this.c_header = this.node.getElementsByClassName('header')[0];
-        this.c_text = this.node.getElementsByClassName('text')[0];
-        this.c_name = this.node.getElementsByClassName('name')[0];
-        this.c_paid = this.node.getElementsByClassName('paid')[0];
-        this.c_time = this.node.getElementsByClassName('c_time')[0];
-        this.c_time.setAttribute('time_in_ms', timeInMs);
+        this.c_header = <HTMLDivElement>this.node.getElementsByClassName('header')[0];
+        this.c_text = <HTMLDivElement>this.node.getElementsByClassName('text')[0];
+        this.c_name = <HTMLDivElement>this.node.getElementsByClassName('name')[0];
+        this.c_paid = <HTMLDivElement>this.node.getElementsByClassName('paid')[0];
+        this.c_time = <HTMLSpanElement>this.node.getElementsByClassName('c_time')[0];
+        this.c_time.setAttribute('time_in_ms', timeInMs.toString());
         this.c_time.innerHTML = prettyFormatTime(timeInMs);
         this.c_time.onclick = comment_time_click;
     }
@@ -49,32 +59,32 @@ class SuperChatNode {
 
 function resizeChatDiv() {
     const height = video1.getClientRects()[0].height
-    chat_div.style.height = (height-5) + "px";
+    chat_div.style.height = (height - 5) + "px";
 }
 
 // 針對直立影片（寬度比高度還要小），預設的 css width:70% 不管用
 // 很直覺得設定 max-height 或是 height 也是不管用
 // 所以我們需要根據影片以及視窗的長寬比例來計算一個 % 數。
 function resizeShortVideo() {
-  const v_height = video1.getClientRects()[0].height;
-  const v_width = video1.getClientRects()[0].width;
-  if (v_height > v_width) {
-    const w_height = window.innerHeight;
-    const w_width = window.innerWidth;
-    const target_height = w_height * 0.8;
-    const target_width = (v_width / v_height) * target_height;
-    const target_percent = Math.floor((target_width*100)/w_width);
-    video1.style.width = target_percent + "%";
-    video1.style.paddingLeft = "5em";
-    video1.style.paddingRight = "5em";
-    //video1.style.width = "22%";
-  }
+    const v_height = video1.getClientRects()[0].height;
+    const v_width = video1.getClientRects()[0].width;
+    if (v_height > v_width) {
+        const w_height = window.innerHeight;
+        const w_width = window.innerWidth;
+        const target_height = w_height * 0.8;
+        const target_width = (v_width / v_height) * target_height;
+        const target_percent = Math.floor((target_width * 100) / w_width);
+        video1.style.width = target_percent + "%";
+        video1.style.paddingLeft = "5em";
+        video1.style.paddingRight = "5em";
+        //video1.style.width = "22%";
+    }
 }
 
 window.addEventListener("resize", resizeChatDiv);
 video1.addEventListener("resize", resizeChatDiv);
 
-function prettyFormatTime(timeInMs) {
+function prettyFormatTime(timeInMs: number) {
     const timeInSec = Math.floor(timeInMs / 1000);
     const timeSec = timeInSec % 60;
     const timeInMinute = Math.floor(timeInSec / 60);
@@ -93,11 +103,11 @@ function prettyFormatTime(timeInMs) {
     return str;
 }
 
-async function wait(timeInMs) {
+async function wait(timeInMs: number) {
     await new Promise(resolve => setTimeout(resolve, timeInMs));
 }
 
-async function create_chat_item(json_text) {
+async function create_chat_item(json_text: string) {
     if (json_text.length < 10)
         return;
     var json;
@@ -154,8 +164,7 @@ async function create_chat_item(json_text) {
     }
 }
 
-function render_liveChatTextMessage(liveChatTextMessageRenderer, timeInMs)
-{
+function render_liveChatTextMessage(liveChatTextMessageRenderer: any, timeInMs: number) {
     var hasText = false;
     var o = new ChatTextNode(timeInMs);
 
@@ -166,11 +175,12 @@ function render_liveChatTextMessage(liveChatTextMessageRenderer, timeInMs)
         return;
     }
 
+    var hasText = false;
     const runs = liveChatTextMessageRenderer.message.runs;
     o.c_content.innerHTML = "";
     for (const run of runs) {
         if ('text' in run) {
-            span = document.createElement('span');
+            let span = document.createElement('span');
             span.innerHTML = run.text;
             o.c_content.appendChild(span);
             hasText = true;
@@ -179,8 +189,8 @@ function render_liveChatTextMessage(liveChatTextMessageRenderer, timeInMs)
             const emoji = run.emoji;
             var image_url = "";
             if ('image' in emoji && 'thumbnails' in emoji.image) {
-                thumbnails = emoji.image.thumbnails;
-                let image_url = thumbnails[thumbnails.length-1].url;
+                let thumbnails = emoji.image.thumbnails;
+                let image_url = thumbnails[thumbnails.length - 1].url;
                 let img = document.createElement('img');
                 img.setAttribute('src', image_url);
                 img.setAttribute('class', 'emoji');
@@ -208,7 +218,7 @@ function render_liveChatTextMessage(liveChatTextMessageRenderer, timeInMs)
             if ('customThumbnail' in liveChatAuthorBadgeRenderer &&
                 'thumbnails' in liveChatAuthorBadgeRenderer.customThumbnail) {
                 let thumbnails = liveChatAuthorBadgeRenderer.customThumbnail.thumbnails;
-                let image_url = thumbnails[thumbnails.length-1].url;
+                let image_url = thumbnails[thumbnails.length - 1].url;
                 let img = document.createElement('img');
                 img.setAttribute('src', image_url);
                 o.c_badges.appendChild(img);
@@ -216,15 +226,13 @@ function render_liveChatTextMessage(liveChatTextMessageRenderer, timeInMs)
             }
         }
     }
-    if (hasText)
-    {
+    if (hasText) {
         return o;
     }
     return null;
 }
 
-function render_liveChatPaidMessage(liveChatPaidMessageRenderer, timeInMs)
-{
+function render_liveChatPaidMessage(liveChatPaidMessageRenderer: any, timeInMs: number) {
     var o = new SuperChatNode(timeInMs)
 
     if ('headerBackgroundColor' in liveChatPaidMessageRenderer) {
@@ -243,7 +251,7 @@ function render_liveChatPaidMessage(liveChatPaidMessageRenderer, timeInMs)
         'simpleText' in liveChatPaidMessageRenderer.purchaseAmountText) {
         o.c_paid.innerHTML = liveChatPaidMessageRenderer.purchaseAmountText.simpleText;
     } else if ('headerSubtext' in liveChatPaidMessageRenderer &&
-               'simpleText' in liveChatPaidMessageRenderer.headerSubtext) {
+        'simpleText' in liveChatPaidMessageRenderer.headerSubtext) {
         o.c_paid.innerHTML = liveChatPaidMessageRenderer.headerSubtext.simpleText;
     }
 
@@ -253,7 +261,7 @@ function render_liveChatPaidMessage(liveChatPaidMessageRenderer, timeInMs)
         o.c_text.innerHTML = "";
         for (const run of runs) {
             if ('text' in run) {
-                span = document.createElement('span');
+                let span = document.createElement('span');
                 span.innerHTML = run.text;
                 o.c_text.appendChild(span);
             }
@@ -261,9 +269,9 @@ function render_liveChatPaidMessage(liveChatPaidMessageRenderer, timeInMs)
                 const emoji = run.emoji;
                 var image_url = "";
                 if ('image' in emoji && 'thumbnails' in emoji.image) {
-                    thumbnails = emoji.image.thumbnails;
-                    image_url = thumbnails[thumbnails.length-1].url;
-                    img = document.createElement('img');
+                    let thumbnails = emoji.image.thumbnails;
+                    image_url = thumbnails[thumbnails.length - 1].url;
+                    let img = document.createElement('img');
                     img.setAttribute('src', image_url);
                     img.setAttribute('class', 'emoji');
                     //img.setAttribute('width', '1em');
@@ -285,8 +293,7 @@ function render_liveChatPaidMessage(liveChatPaidMessageRenderer, timeInMs)
     return o;
 }
 
-function render_liveChatSticker(liveChatPaidStickerRenderer, timeInMs)
-{
+function render_liveChatSticker(liveChatPaidStickerRenderer: any, timeInMs: number) {
     var o = new SuperChatNode(timeInMs);
     o.c_header.style.backgroundColor = toColor(liveChatPaidStickerRenderer.moneyChipBackgroundColor);
     o.c_header.style.color = toColor(liveChatPaidStickerRenderer.moneyChipTextColor);
@@ -302,8 +309,8 @@ function render_liveChatSticker(liveChatPaidStickerRenderer, timeInMs)
     if ('sticker' in liveChatPaidStickerRenderer &&
         'thumbnails' in liveChatPaidStickerRenderer.sticker) {
         const thumbnails = liveChatPaidStickerRenderer.sticker.thumbnails;
-        image_url = thumbnails[thumbnails.length-1].url;
-        img = document.createElement('img');
+        let image_url = thumbnails[thumbnails.length - 1].url;
+        let img = document.createElement('img');
         img.setAttribute('src', image_url);
         img.setAttribute('class', 'sticker');
         //img.setAttribute('width', '1em');
@@ -320,8 +327,7 @@ function render_liveChatSticker(liveChatPaidStickerRenderer, timeInMs)
     return o;
 }
 
-function render_liveChatGift(liveChatSponsorshipsGiftPurchaseAnnouncementRenderer, timeInMs)
-{
+function render_liveChatGift(liveChatSponsorshipsGiftPurchaseAnnouncementRenderer: any, timeInMs: number) {
     if (!('header' in liveChatSponsorshipsGiftPurchaseAnnouncementRenderer))
         return;
     const header = liveChatSponsorshipsGiftPurchaseAnnouncementRenderer.header;
@@ -348,10 +354,9 @@ function render_liveChatGift(liveChatSponsorshipsGiftPurchaseAnnouncementRendere
         o.c_paid.innerHTML = "";
         for (const run of runs) {
             if ('text' in run) {
-                span = document.createElement('span');
+                let span = document.createElement('span');
                 span.innerHTML = run.text;
                 o.c_paid.appendChild(span);
-                hasText = true;
             } else {
                 console.log('unknown message');
             }
@@ -360,8 +365,7 @@ function render_liveChatGift(liveChatSponsorshipsGiftPurchaseAnnouncementRendere
     return o
 }
 
-function render_liveChatGiftRedemption(redempt, timeInMs)
-{
+function render_liveChatGiftRedemption(redempt: any, timeInMs: number) {
     let o = new ChatTextNode(timeInMs);
     o.c_content.innerHTML = "";
     o.c_content.classList.add("gray");
@@ -390,8 +394,7 @@ function render_liveChatGiftRedemption(redempt, timeInMs)
     return o
 }
 
-function render_giftMessageViewModel(gift, timeInMs)
-{
+function render_giftMessageViewModel(gift: any, timeInMs: number) {
     let o = new SuperChatNode(timeInMs);
     o.setGiftMode();
     o.c_text.innerHTML = "";
@@ -410,17 +413,17 @@ function render_giftMessageViewModel(gift, timeInMs)
     return o
 }
 
-function toColor(num) {
+function toColor(num: number) {
     num >>>= 0;
     var b = num & 0xFF,
         g = (num & 0xFF00) >>> 8,
         r = (num & 0xFF0000) >>> 16,
-        a = ( (num & 0xFF000000) >>> 24 ) / 255 ;
+        a = ((num & 0xFF000000) >>> 24) / 255;
     return "rgba(" + [r, g, b, a].join(",") + ")";
 }
 
 async function init_js_from_embedded() {
-    const pre = document.getElementById('live-chat-json-text');
+    let pre = <HTMLPreElement>document.getElementById('live-chat-json-text');
     const text = pre.innerHTML;
     var json_lines = text.split(/\r?\n/);
 
@@ -437,8 +440,8 @@ async function init_js_from_embedded() {
 }
 
 function init_setlist_from_embedded() {
-    pre = document.getElementById('setlist-json-text');
-    json_text = pre.innerHTML;
+    let pre = <HTMLPreElement>document.getElementById('setlist-json-text');
+    let json_text = pre.innerHTML;
     if (json_text.length == 0)
         return;
     var json;
@@ -449,10 +452,10 @@ function init_setlist_from_embedded() {
         return;
     }
     for (const chapter of json) {
-        const node = timestamp_templ.cloneNode(true);
+        const node = <HTMLDivElement>timestamp_templ.cloneNode(true);
         node.removeAttribute('id');
-        t_time = node.getElementsByClassName('t_time')[0];
-        t_title = node.getElementsByClassName('t_title')[0];
+        let t_time = <HTMLSpanElement>node.getElementsByClassName('t_time')[0];
+        let t_title = <HTMLSpanElement>node.getElementsByClassName('t_title')[0];
         t_time.innerHTML = prettyFormatTime(chapter.time_in_ms);
         t_title.innerHTML = chapter.title;
         t_time.setAttribute('time_in_ms', chapter.time_in_ms);
@@ -461,22 +464,28 @@ function init_setlist_from_embedded() {
     }
 }
 
-function comment_time_click(eventArg) {
-    const element = eventArg.currentTarget;
-    const timeInMs = parseInt(element.getAttribute('time_in_ms'));
+function comment_time_click(eventArg: PointerEvent) {
+    const element = <HTMLSpanElement>eventArg.currentTarget;
+    let timeMsStr = element.getAttribute('time_in_ms');
+    if (timeMsStr == null)
+        return;
+    const timeInMs = parseInt(timeMsStr);
     video1.currentTime = timeInMs / 1000;
 }
 
-function timestamp_click(eventArg) {
-    const element = eventArg.currentTarget;
-    timeInMs = parseInt(element.getAttribute('time_in_ms'));
+function timestamp_click(eventArg: PointerEvent) {
+    const element = <HTMLSpanElement>eventArg.currentTarget;
+    let timeMsStr = element.getAttribute('time_in_ms');
+    if (timeMsStr == null)
+        return;
+    const timeInMs = parseInt(timeMsStr);
     video1.currentTime = timeInMs / 1000;
 }
 
 function sync_live_chat() {
     const current_time_in_ms = video1.currentTime * 1000;
     var i = 0;
-    for(i=0; i<chat_array.length; i++) {
+    for (i = 0; i < chat_array.length; i++) {
         if (chat_array[i] >= current_time_in_ms) {
             break;
         }
@@ -511,11 +520,11 @@ video1.onseeked = function() {
 }
 
 option_toggle_theme?.addEventListener('click', () => {
-  let curTheme = document.documentElement.getAttribute('data-theme');
-  let newTheme = 'dark';
-  if (curTheme == 'dark')
-    newTheme = 'light';
-  document.documentElement.setAttribute('data-theme', newTheme);
+    let curTheme = document.documentElement.getAttribute('data-theme');
+    let newTheme = 'dark';
+    if (curTheme == 'dark')
+        newTheme = 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
 });
 init_js_from_embedded();
 init_setlist_from_embedded();
