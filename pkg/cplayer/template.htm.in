@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-TW" data-theme="dark">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,6 +18,7 @@
       <div id="timestamp"></div>
       <div id="option">
         <label><input id="option-sync" type="checkbox" checked></input>聊天室自動捲動</label>
+        <button type="button" id="option-toggle-theme">切換背景顏色(黑/白)</button>
       </div>
     </div>
     <div style="display:none">

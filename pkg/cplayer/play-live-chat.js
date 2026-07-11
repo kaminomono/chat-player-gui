@@ -6,6 +6,7 @@ const chat_templ = document.getElementById('live-chat-item-template');
 const sc_templ = document.getElementById('live-chat-sc-template');
 const timestamp_templ = document.getElementById('timestamp-template');
 const option_sync = document.getElementById('option-sync');
+const option_toggle_theme = document.getElementById('option-toggle-theme');
 const chat_array = [];
 
 class ChatTextNode
@@ -509,6 +510,13 @@ video1.onseeked = function() {
     }
 }
 
+option_toggle_theme?.addEventListener('click', () => {
+  let curTheme = document.documentElement.getAttribute('data-theme');
+  let newTheme = 'dark';
+  if (curTheme == 'dark')
+    newTheme = 'light';
+  document.documentElement.setAttribute('data-theme', newTheme);
+});
 init_js_from_embedded();
 init_setlist_from_embedded();
 
