@@ -90,27 +90,6 @@
 
 請不要把 exe 放在需要管理員權限的位置（例如 `C:\Program Files`），否則無法儲存設定。
 
-## 從原始碼執行
-
-```bash
-git clone [https://github.com/你的帳號/你的倉庫.git](https://github.com/你的帳號/你的倉庫.git)
-cd 你的倉庫
-python gui.py
-```
-
-需要 Python 3.9 以上（程式使用了 `dict | dict` 語法）。僅使用標準函式庫，不需要額外安裝套件。
-
-## 自行打包
-
-```bat
-pip install pyinstaller
-pyinstaller -F --noconsole --icon neko33suki.ico --add-data "neko33suki.ico;." --name "chatplayer操作面板" gui.py
-```
-
-或直接執行專案內的 `Da-Bao-exe.bat`，會自動打包並清理暫存檔，最後在目前目錄留下 exe。
-
-`--add-data` 是為了把圖示一併包進 exe，執行時視窗與工作列才會顯示自訂圖示。
-
 ## 常見問題
 
 **按「開始轉換」後顯示「找不到主程式」？**
@@ -124,10 +103,6 @@ pyinstaller -F --noconsole --icon neko33suki.ico --add-data "neko33suki.ico;." -
 
 **mkv 檔案為什麼不能用？**
 瀏覽器只能播放 `mp4` 與 `webm`，這是原專案的限制。
-
-**Windows 顯示「已保護您的電腦」？**
-這是因為程式沒有數位簽章，PyInstaller 打包的 exe 常被 SmartScreen 或防毒軟體誤判。
-可以自行閱讀 `gui.py` 原始碼並自行打包。
 
 ## 致謝
 
