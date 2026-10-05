@@ -5,7 +5,7 @@
 
 > 本專案是第三方的非官方 GUI 外殼，只負責組合參數並呼叫 `chatplayer.exe`，轉檔功能全部由原專案提供。
 
-![主畫面](docs/screenshot.png)
+<img width="842" height="688" alt="主畫面" src="https://github.com/user-attachments/assets/8625d0ac-6bfa-4276-a92f-85a203e59b98" />
 
 ## 功能
 
@@ -135,5 +135,4 @@ pyinstaller -F --noconsole --icon neko33suki.ico --add-data "neko33suki.ico;." -
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp)：下載影片與聊天室紀錄
 
 ## 授權
-
-請填入你選擇的授權條款（例如 MIT），並在倉庫中加入 `LICENSE` 檔案。
+ MIT
