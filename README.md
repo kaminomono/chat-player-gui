@@ -1,140 +1,139 @@
-# [下載點](https://github.com/ting1322/chat-player/releases/latest/download/chatplayer-windows-x86-64.zip)
+# chatplayer 操作面板
 
-yt-dlp 下載的 XXX.live-chat.json 聊天室紀錄檔，可以用這個專案播放。
+為 [ting1322/chat-player](https://github.com/ting1322/chat-player) 製作的 Windows 圖形化操作介面。
+不需要手打命令列，用點選的方式就能設定 `chatplayer.exe` 的參數，把 yt-dlp 下載的 `live_chat.json` 轉成可離線播放的聊天室 `.htm`。
 
-# 功能
+> 本專案是第三方的非官方 GUI 外殼，只負責組合參數並呼叫 `chatplayer.exe`，轉檔功能全部由原專案提供。
 
-- 下載聊天室的貼圖，供離線使用。
-- 滑鼠拉動影片時間軸時，同步捲動聊天室。
-- 點聊天室的紀錄的時間，把影片跳到指定時間。
-- 時間軸 (特定格式.txt)
+![主畫面](docs/screenshot.png)
 
-# 使用方式
+## 功能
 
-1. 你要先學會用 [yt-dlp](https://github.com/yt-dlp/yt-dlp) ，抓影片加上參數抓聊天室 json 檔案
-   ```
-   --write-subs --sub-langs live_chat
-   ```
-2. 安裝 python 3 (如果是使用.exe版本的話就不用)
-3. 把程式放在影片的旁邊，然後執行他。
-   如果有檔案
-   ```
-   D:\vtuber\maisaki-berry\2022-04-07-メン限\2022-04-07.mp4
-   D:\vtuber\maisaki-berry\2022-04-07-メン限\2022-04-07.live_chat.json
-   ```
-   那就把程式放在 D:\vtuber\maisaki-berry\2022-04-07-メン限\chatplayer.exe，然後執行他。
-   **注意** 只能使用 mp4 與 webm。mkv 沒辦法播放。
-4. 會看到產生htm檔案，還有.js檔案與 image 目錄，用 firefox 開 htm 檔。
+- 手動選擇主程式 `chatplayer.exe`，或一鍵下載最新版並自動解壓
+- 選擇單一影片檔或整個資料夾（資料夾模式會處理其中所有 `.mp4` / `.webm`）
+- 選好影片後自動帶入同名的 `.live_chat.json` 與同目錄的 `set-list.txt`
+- 圖形化設定全部參數，並即時顯示完整指令預覽（過長自動換行，可一鍵複製）
+- 轉換過程的輸出會顯示在視窗下方的記錄區
+- 完成後可自動開啟輸出資料夾
+- 自動記住上次的設定
+- 單一 exe，免安裝 Python
 
-## 完整 command line
+## 下載與執行
 
+1. 到 [Releases](https://github.com/你的帳號/你的倉庫/releases) 下載 `chatplayer操作面板.exe`。
+2. 直接雙擊執行。
+3. 第一次使用時，按「選擇」指定 `chatplayer.exe`，或按「下載最新版」自動取得。
+
+系統需求：Windows 10 / 11（64 位元）。
+
+## 使用方式
+
+### 事前準備
+
+先用 [yt-dlp](https://github.com/yt-dlp/yt-dlp) 下載影片與聊天室紀錄，需加上參數：
+--write-subs --sub-langs live_chat
+
+會得到類似下面的檔案：
+2022-04-07.mp4
+2022-04-07.live_chat.json
+
+注意：影片只支援 `mp4` 與 `webm`，`mkv` 無法在瀏覽器播放。
+
+### 操作步驟
+
+1. 設定「主程式」：選擇 `chatplayer.exe`，或按「下載最新版」。
+2. 設定「影片檔 / 資料夾」：按「檔案」選單支影片，或按「資料夾」處理整個目錄。
+3. 視需要調整其他參數（見下表）。
+4. 按「開始轉換」。
+5. 轉換完成後，用瀏覽器（建議 Firefox）開啟產生的 `.htm` 檔。
+
+## 欄位說明
+
+| 欄位 | 對應參數 | 說明 |
+|---|---|---|
+| 主程式 | — | `chatplayer.exe` 的位置。「版本」按鈕會執行 `-version` 顯示版本 |
+| 影片檔 / 資料夾 | 最後一個位置參數 | 可選單一檔案或資料夾 |
+| chat json | `-chat-json` | 聊天室 json。留空則自動找「影片檔名 + .live_chat.json」 |
+| 時間軸 txt | `-set-list` | 時間軸文字檔。留空則自動讀取影片旁的 `set-list.txt` |
+| 輸出目錄 | `-out-dir` | 留空 = 影片檔同目錄（不建議修改） |
+| 輸出檔名 | `-output` | 留空 = 與影片檔同檔名（副檔名 `.htm`） |
+| 時間偏移秒 | `-offset` | 見下方說明 |
+| 強制深色 | `-force-dark` | 強制黑底配色，預設依瀏覽器自動判斷 |
+| 不下載貼圖 | `-no-download-pic` | 不把聊天室貼圖存到本機，網頁改用線上圖片 |
+| 分離 js/css | `-split-res` | 把 JavaScript 與 CSS 獨立成檔案，預設嵌入 html |
+| 完成後開啟輸出資料夾 | — | 轉換成功後自動開啟輸出位置 |
+
+### 時間偏移（-offset）
+
+- 負數，例如 `-offset -15959`：在直播開始前 15959 秒就開始抓 `live_chat.json`。
+- 正數：在直播開始後才開始抓 `live_chat.json`。
+
+負數偏移需要 chat-player v1.0.5 以上的版本。
+
+### 資料夾模式的限制
+
+選擇資料夾時，會有以下限制，這些都來自原專案：
+
+- 不支援 `-chat-json` 與 `-set-list`，這兩欄會自動停用。
+- 不建議指定 `-output`，否則所有影片都會輸出成同一個檔名而互相覆蓋，執行前會跳出警告。
+- 每支影片會各自尋找同名的 `.live_chat.json`。
+
+### 貼圖
+
+貼圖預設會下載到 `images` 目錄供離線使用，多個 `.htm` 可以共用。
+不建議關閉，因為會員貼圖可能被刪除。
+
+## 設定檔
+
+設定會自動儲存在 exe 旁邊的 `chatplayer_gui.json`。
+如果要重置，直接刪除這個檔案即可。
+
+請不要把 exe 放在需要管理員權限的位置（例如 `C:\Program Files`），否則無法儲存設定。
+
+## 從原始碼執行
+
+```bash
+git clone [https://github.com/你的帳號/你的倉庫.git](https://github.com/你的帳號/你的倉庫.git)
+cd 你的倉庫
+python gui.py
 ```
-chatplay [option] [file or directory]
 
-option:
-  -chat-json string
-        live chat json file (download by yt-dlp)
-  -force-dark
-        強制使用黑色背景(預設是依照瀏覽器自動判斷)
-  -no-download-pic
-        不要把聊天室貼圖抓下來 (每次開網頁使用youtube檔案)
-  -offset int
-        time offset for live chat (second)
-  -out-dir string
-        輸出目錄，預設是目前工作目錄
-  -output string
-        output html file, 不指定就是目前工作目錄跟影片同檔名的htm
-  -set-list string
-        時間軸 txt 檔
-  -split-res
-        分離 javascript, css 檔案，預設是嵌在html裡面
- ```
+需要 Python 3.9 以上（程式使用了 `dict | dict` 語法）。僅使用標準函式庫，不需要額外安裝套件。
 
-輸出檔案預設在影片檔旁邊，檔名為影片檔 + .htm。
-json 檔案預設是影片檔名 + live_chat.json，這也是 yt-dlp 下載下來預設的檔名。
+## 自行打包
 
-# Build from source
+```bat
+pip install pyinstaller
+pyinstaller -F --noconsole --icon neko33suki.ico --add-data "neko33suki.ico;." --name "chatplayer操作面板" gui.py
+```
 
-正常人不需要編譯，直接下載最新的 exe 即可。
-下載區有提供 windows-x86-64 與 linux-x86-64 執行檔。
-如果你是蘋果電腦，或是更奇怪的 arm 之類，可能需要編譯。
+或直接執行專案內的 `Da-Bao-exe.bat`，會自動打包並清理暫存檔，最後在目前目錄留下 exe。
 
-1. 需要 golang 1.24, node.js v24.13.1
-2. git clone https://github.com/ting1322/chat-player.git
-3. 執行 build.sh
-4. 得到 chatplayer.exe
+`--add-data` 是為了把圖示一併包進 exe，執行時視窗與工作列才會顯示自訂圖示。
 
-# 補充說明
+## 常見問題
 
-1. 影片必須是 mp4 或 webm，瀏覽器只能播放這兩種。千萬別用 mkv。
-2. 聊天室的貼圖會下載並存在 images 目錄，供離線使用。
-   可以加參數 --no-download-pic 關閉這個下載功能，讓網頁使用線上的圖片。
-   （不建議，考慮會員貼圖有刪除的可能）
-3. 貼圖存檔的檔名，採用原始網址hash的值。相同貼圖、相同解析度只會下載一次。
-   images 目錄可以供多個 htm 共用。
-4. 可以提供時間軸 txt 檔，格式範例如下
-   ```
-   0:00:00 start
-   0:01:30 chapter 1
-   0:25:00 chapter 2
-   ```
-   文字檔如果放在 XXX.webm 旁邊，命名為 set-list.txt，會自動讀入。
-   其他檔案名稱可以用 --set-list FILENAME.txt 輸入。
-5. 一個比較無關的事情，直播中、預期直播結束會砍檔的影片想要備份聊天室，
-   你需要同時開兩隻程式，可以選擇 yt-dlp + yt-dlp 開兩次，或是 yt-dlp + ytarchive。
-   以前者來說，第一個 yt-dlp 需要下 `--write-subs --sub-langs live_chat --no-download`，
-   專門下載聊天室，並開第二個 yt-dlp 加參數 `--no-write-subs` 不要聊天室只下載影片。
-   第二個 yt-dlp 可以換成 ytarchive。
-6. 測試過 久遠たま、伊冬ユナ、苺咲べりぃ的影片。如果其他人的影片有問題，給我 json 檔看看。
-   有貓耳的話，處理速度會比較快。
-   
-# change log
+**按「開始轉換」後顯示「找不到主程式」？**
+請確認「主程式」欄位指向的是 `chatplayer.exe`，且檔案存在。
 
-從新到舊
+**轉換完沒有看到 htm？**
+預設輸出在影片檔同一個資料夾。若有修改輸出目錄，請到該目錄找。
 
-## 2026-07-11 v1.1.0
+**聊天室沒有跟影片同步？**
+檢查「時間偏移秒」。若是在直播開始前就開始抓聊天室，需填負數。
 
-1. 增加顯示收到會員禮物以及送出xx寶石兩種新東西
-2. 增加一個按鈕以便切換黑白配色
+**mkv 檔案為什麼不能用？**
+瀏覽器只能播放 `mp4` 與 `webm`，這是原專案的限制。
 
-## 2026-05-10 v1.0.5
+**Windows 顯示「已保護您的電腦」？**
+這是因為程式沒有數位簽章，PyInstaller 打包的 exe 常被 SmartScreen 或防毒軟體誤判。
+可以自行閱讀 `gui.py` 原始碼並自行打包。
 
-1. 修正負數的 `-offset -15959` 沒有把時間軸往前拉。
-   使用的場景是：太早抓 live_chat.json，在直播還沒開始前。
-2. 增加 `-force-dark` 參數，強制使用黑底配色
+## 致謝
 
-## 2025-09-30 v1.0.3
+- [ting1322/chat-player](https://github.com/ting1322/chat-player)：實際負責轉檔的原專案
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp)：下載影片與聊天室紀錄
 
-1. 修正直式影片（高度比寬度大）顯示超出螢幕範圍，改為限制高度在大概
-   80% 左右。css 的 `max-height` 不知道為什麼不起作用，所以是依據比例
-   算出 `width` 寬度的 `%` 數。
-2. 即使取消勾選「聊天室自動捲動」，暫停狀態做影片 seek 仍然會連動聊天
-   室。改為不連動。
+## 授權
 
-1.0.0 到 1.0.3 中間的版本不重要，有些改過去討論完又改回來的東西。
-
-## 2024-02-10 v1.0.0
-
-1. 加入 checkbox 可以隨時關閉聊天室自動捲動。
-   有時候會想要一邊撥影片，一邊用滑鼠捲動聊天室。
-2. 很久沒動這份程式，版號就從 1.0.0 開始吧。
-
-## 2022-11-06 v0.5.2
-
-1. 支援顯示 super sticker、member free message、membership gift。
-2. play-live-chat.js 預設嵌入 htm 之中，這個 js 檔案可以刪掉了。
-   (新增參數 -split-res 模仿舊版行為，分離的 js 唯一的好處是 debug)
-3. 預設的 .htm 輸出目錄改為影片的旁邊。
-   (可以用 -out-dir 指定輸出目錄，可以模仿舊版行為)
-4. 改善畫面顯示編排，尤其是當視窗改變大小時。
-5. 轉檔程式改用 golang 取代 python。
-   指令參數格式有點不一樣，帶減號的 option 放在前面，而檔名或目錄必須在最後面。
-
-## 2022-05-22 v0.3.3
-
-1. 支援目錄作為參數，抓目錄下所有 webm 與 mp4
-2. 修正 windows 10 的 edge 瀏覽器按時間沒辦法跳到影片時間
-
-## 2022-05-03 v0.3.1
-
-第一個能在 windows 跑的版本 (先前都有問題，而我沒試過)
+請填入你選擇的授權條款（例如 MIT），並在倉庫中加入 `LICENSE` 檔案。
