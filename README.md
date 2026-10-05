@@ -34,8 +34,8 @@
 --write-subs --sub-langs live_chat
 
 會得到類似下面的檔案：
-2022-04-07.mp4
 
+2022-04-07.mp4
 2022-04-07.live_chat.json
 
 注意：影片只支援 `mp4` 與 `webm`，`mkv` 無法在瀏覽器播放。
