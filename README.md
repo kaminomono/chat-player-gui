@@ -5,7 +5,8 @@
 
 > 本專案是第三方的非官方 GUI 外殼，只負責組合參數並呼叫 `chatplayer.exe`，轉檔功能全部由原專案提供。
 
-<img width="842" height="688" alt="主畫面" src="https://github.com/user-attachments/assets/8625d0ac-6bfa-4276-a92f-85a203e59b98" />
+<img width="844" height="652" alt="螢幕擷取畫面 2026-10-11 151349" src="https://github.com/user-attachments/assets/7a668c3f-95f1-4930-af37-143e82fe8a2e" />
+
 
 ## 功能
 
